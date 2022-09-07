@@ -1,5 +1,5 @@
 {
-  "name": "aeq-reward-pools",
+  "name": "hardhat-template",
   "scripts": {
     "build": "npx hardhat compile",
     "test": "npx hardhat test",
