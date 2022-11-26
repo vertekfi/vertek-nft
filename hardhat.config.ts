@@ -22,19 +22,19 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       forking: {
-        url: process.env.BSC_ARCHIVE_NODE || "",
+        url: process.env.BSC_RPC || "",
         blockNumber: 20908139, // 8/30 ~8:00PM
       },
     },
     goerli: {
       url: process.env.GOERLI_RPC || "",
       accounts:
-        process.env.LOTTERY_OPERATOR_KEY !== undefined ? [process.env.LOTTERY_OPERATOR_KEY] : [],
+        process.env.DEV_KEY !== undefined ? [process.env.DEV_KEY] : [],
     },
     bsc: {
-      url: process.env.BSC_MAINNET_URL || "",
+      url: process.env.BSC_RPC || "",
       accounts:
-        process.env.LOTTERY_OPERATOR_KEY !== undefined ? [process.env.LOTTERY_OPERATOR_KEY] : [],
+        process.env.DEV_KEY !== undefined ? [process.env.DEV_KEY] : [],
     },
   },
   etherscan: {
