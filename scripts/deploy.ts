@@ -1,11 +1,12 @@
 import { ethers } from "hardhat";
 
 async function deployFactory() {
-  const SmartChefFactory = await ethers.getContractFactory("SmartChefFactory");
+  const contractName = ''
+  const SmartChefFactory = await ethers.getContractFactory(contractName);
   const factory = await SmartChefFactory.deploy();
   await factory.deployed();
 
-  console.log(`SmartChefFactory deployed to ${factory.address}`);
+  console.log(`${contractName} deployed to ${factory.address}`);
 }
 
 async function deployPool() {}
