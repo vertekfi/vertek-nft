@@ -1,10 +1,12 @@
 
+// SPDX-License-Identifier: MIT
+pragma solidity 0.8.4;
 
 import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
 
 contract ContractUpgradeable  is AccessControlUpgradeable {
 
-    bytes32 public constant MY_ROLE = keccak256("MY_ROLE");
+     bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() {
@@ -20,5 +22,8 @@ contract ContractUpgradeable  is AccessControlUpgradeable {
     function initialize() public initializer {
       // Call all base initializers
       __AccessControl_init();
+
+      _grantRole(DEFAULT_ADMIN_ROLE, _msgSender());
+      _grantRole(ADMIN_ROLE, _msgSender());
     }
 }
