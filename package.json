@@ -3,6 +3,7 @@
   "scripts": {
     "build": "npx hardhat compile",
     "test": "npx hardhat test",
+    "test:forge": "forge test",
     "deploy": "npx hardhat run ./scripts/deploy.ts"
   },
   "devDependencies": {

@@ -2,7 +2,7 @@
 src = 'contracts'
 out = 'forge-artifacts'
 libs = ['node_modules', 'lib']
-test = 'test/foundry'
+test = 'test/forge'
 cache_path = 'forge-cache'
 
 optimizer = true
