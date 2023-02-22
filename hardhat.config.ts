@@ -23,7 +23,7 @@ const config: HardhatUserConfig = {
     hardhat: {
       forking: {
         url: process.env.BSC_RPC || "",
-        blockNumber: 20908139, // 8/30 ~8:00PM
+        blockNumber: 25894014
       },
     },
     goerli: {
