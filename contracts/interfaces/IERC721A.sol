@@ -2,7 +2,7 @@
 // ERC721A Contracts v3.3.0
 // Creator: Chiru Labs
 
-pragma solidity 0.8.12;
+pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
