@@ -137,11 +137,6 @@ contract VertekFox is ERC721AQueryable, AccessControlUpgradeable, ReentrancyGuar
         _;
     }
 
-    modifier onlyRarityUpdaterAddress() {
-        require(rarityUpdaterAddress == msg.sender, "caller is not the operator");
-        _;
-    }
-
     modifier onlyOperator() {
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()) || hasRole(OPERATOR_ROLE, _msgSender()), "Only operator");
         _;
@@ -151,11 +146,11 @@ contract VertekFox is ERC721AQueryable, AccessControlUpgradeable, ReentrancyGuar
         rarityUpdaterAddress = _rarityUpdaterAddress;
     }
 
-    function setAttack(uint256 _tokenId, uint256 _attack) external onlyRarityUpdaterAddress {
+    function setAttack(uint256 _tokenId, uint256 _attack) external onlyOperator {
         attackRarity[_tokenId] = _attack;
     }
 
-    function setDefenseRarity(uint256 _tokenId, uint256 _defense) external onlyRarityUpdaterAddress {
+    function setDefenseRarity(uint256 _tokenId, uint256 _defense) external onlyOperator {
         defenseRarity[_tokenId] = _defense;
     }
 
