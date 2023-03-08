@@ -5,11 +5,11 @@
 pragma solidity 0.8.13;
 
 import "./interfaces/IERC721A.sol";
-import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
-import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/utils/Context.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
-import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/introspection/ERC165Upgradeable.sol";
 
 /**
  * @dev Implementation of https://eips.ethereum.org/EIPS/eip-721[ERC721] Non-Fungible Token Standard, including
@@ -21,9 +21,9 @@ import "@openzeppelin/contracts/utils/introspection/ERC165.sol";
  *
  * Assumes that the maximum token id cannot exceed 2**256 - 1 (max value of uint256).
  */
-contract ERC721A is Context, ERC165, IERC721A {
-    using Address for address;
-    using Strings for uint256;
+contract ERC721A is ContextUpgradeable, ERC165Upgradeable, IERC721A {
+    using AddressUpgradeable for address;
+    using StringsUpgradeable for uint256;
 
     // The tokenId of the next token to be minted.
     uint256 internal _currentIndex;
@@ -50,7 +50,17 @@ contract ERC721A is Context, ERC165, IERC721A {
     // Mapping from owner to operator approvals
     mapping(address => mapping(address => bool)) private _operatorApprovals;
 
-    constructor(string memory name_, string memory symbol_) {
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        /**
+         * Prevents later initialization attempts after deployment.
+         * If a base contract was left uninitialized, the implementation contracts
+         * could potentially be compromised in some way.
+         */
+        _disableInitializers();
+    }
+
+    function __ERC721A_init(string memory name_, string memory symbol_) public initializer {
         _name = name_;
         _symbol = symbol_;
         _currentIndex = _startTokenId();
@@ -88,10 +98,12 @@ contract ERC721A is Context, ERC165, IERC721A {
     /**
      * @dev See {IERC165-supportsInterface}.
      */
-    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC165, IERC165) returns (bool) {
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(ERC165Upgradeable, IERC165Upgradeable) returns (bool) {
         return
-            interfaceId == type(IERC721).interfaceId ||
-            interfaceId == type(IERC721Metadata).interfaceId ||
+            interfaceId == type(IERC721Upgradeable).interfaceId ||
+            interfaceId == type(IERC721MetadataUpgradeable).interfaceId ||
             super.supportsInterface(interfaceId);
     }
 
@@ -530,8 +542,10 @@ contract ERC721A is Context, ERC165, IERC721A {
         uint256 tokenId,
         bytes memory _data
     ) private returns (bool) {
-        try IERC721Receiver(to).onERC721Received(_msgSender(), from, tokenId, _data) returns (bytes4 retval) {
-            return retval == IERC721Receiver(to).onERC721Received.selector;
+        try IERC721ReceiverUpgradeable(to).onERC721Received(_msgSender(), from, tokenId, _data) returns (
+            bytes4 retval
+        ) {
+            return retval == IERC721ReceiverUpgradeable(to).onERC721Received.selector;
         } catch (bytes memory reason) {
             if (reason.length == 0) {
                 revert TransferToNonERC721ReceiverImplementer();

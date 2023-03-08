@@ -17,55 +17,85 @@
  * Telegram: https://t.me/aalto_protocol
  */
 
-pragma solidity 0.8.12;
+pragma solidity 0.8.13;
 
 import "./ERC721AQueryable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts-upgradeable/access/AccessControlUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
-contract VertekFox is ERC721AQueryable, Ownable, ReentrancyGuard {
-    using Strings for uint256;
+contract VertekFox is ERC721AQueryable, AccessControlUpgradeable, ReentrancyGuardUpgradeable {
+    using StringsUpgradeable for uint256;
+
+    bytes32 public constant OPERATOR_ROLE = keccak256("OPERATOR_ROLE");
 
     bytes32 public merkleRoot;
     mapping(address => bool) public whitelistClaimed;
     mapping(uint256 => uint256) public baseRarity;
     address public rarityUpdaterAddress;
 
-    uint256 internal seedRarity = 1;
+    uint256 internal _seedRarity;
     uint256 internal rarityAssigned;
-    uint256 internal internalIndex = 1;
+    uint256 internal internalIndex;
 
     mapping(uint256 => uint256) public attackRarity;
     mapping(uint256 => uint256) public defenseRarity;
-    uint256 internal a_seedRarity = 3;
-    uint256 internal d_seedRarity = 7;
+    uint256 internal a_seedRarity;
+    uint256 internal d_seedRarity;
 
-    string public uriPrefix = "";
-    string public uriSuffix = ".json";
+    string public uriPrefix;
+    string public uriSuffix;
     string public hiddenMetadataUri;
 
     uint256 public cost;
     uint256 public maxSupply;
     uint256 public maxMintAmountPerTx;
 
-    bool public paused = true;
-    bool public whitelistMintEnabled = false;
-    bool public revealed = false;
+    bool public paused;
+    bool public whitelistMintEnabled;
+    bool public revealed;
 
-    constructor(
+    /// @custom:oz-upgrades-unsafe-allow constructor
+    constructor() {
+        /**
+         * Prevents later initialization attempts after deployment.
+         * If a base contract was left uninitialized, the implementation contracts
+         * could potentially be compromised in some way.
+         */
+        _disableInitializers();
+    }
+
+    function initialize(
         string memory _tokenName,
         string memory _tokenSymbol,
         uint256 _cost,
         uint256 _maxSupply,
         uint256 _maxMintAmountPerTx,
         string memory _hiddenMetadataUri
-    ) ERC721A(_tokenName, _tokenSymbol) {
+    ) public initializer {
+        __ERC721A_init(_tokenName, _tokenSymbol);
+
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(OPERATOR_ROLE, msg.sender);
+
         setCost(_cost);
         maxSupply = _maxSupply;
         setMaxMintAmountPerTx(_maxMintAmountPerTx);
         setHiddenMetadataUri(_hiddenMetadataUri);
         rarityUpdaterAddress = msg.sender;
+
+        uriPrefix = "";
+        uriSuffix = ".json";
+
+        a_seedRarity = 3;
+        d_seedRarity = 7;
+
+        _seedRarity = 1;
+        internalIndex = 1;
+
+        paused = true;
+        whitelistMintEnabled = false;
+        revealed = false;
     }
 
     modifier mintCompliance(uint256 _mintAmount) {
@@ -82,7 +112,7 @@ contract VertekFox is ERC721AQueryable, Ownable, ReentrancyGuard {
     modifier assignRarity(uint256 _mintAmount) {
         uint256 raritySeed = block.timestamp;
         for (uint i = 0; i < _mintAmount; i++) {
-            uint256 rarityModulus = ((raritySeed % 10) + seedRarity) % 10;
+            uint256 rarityModulus = ((raritySeed % 10) + _seedRarity) % 10;
             if (rarityModulus == 0) {
                 rarityAssigned = 4;
             }
@@ -97,11 +127,11 @@ contract VertekFox is ERC721AQueryable, Ownable, ReentrancyGuard {
             }
             baseRarity[internalIndex] = rarityAssigned;
             rarityModulus++;
-            seedRarity = rarityModulus;
+            _seedRarity = rarityModulus;
             attackRarity[internalIndex] = (((raritySeed % 35) + a_seedRarity) % 40) - 4;
-            defenseRarity[internalIndex] = ((raritySeed % 30) + d_seedRarity + seedRarity) % 40;
+            defenseRarity[internalIndex] = ((raritySeed % 30) + d_seedRarity + _seedRarity) % 40;
             a_seedRarity = a_seedRarity + d_seedRarity;
-            d_seedRarity = d_seedRarity + seedRarity;
+            d_seedRarity = d_seedRarity + _seedRarity;
             internalIndex++;
         }
         _;
@@ -112,7 +142,12 @@ contract VertekFox is ERC721AQueryable, Ownable, ReentrancyGuard {
         _;
     }
 
-    function setRarityUpdaterAddress(address _rarityUpdaterAddress) external onlyOwner {
+    modifier onlyOperator() {
+        require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()) || hasRole(OPERATOR_ROLE, _msgSender()), "Only operator");
+        _;
+    }
+
+    function setRarityUpdaterAddress(address _rarityUpdaterAddress) external onlyOperator {
         rarityUpdaterAddress = _rarityUpdaterAddress;
     }
 
@@ -132,7 +167,7 @@ contract VertekFox is ERC721AQueryable, Ownable, ReentrancyGuard {
         require(whitelistMintEnabled, "The whitelist sale is not enabled!");
         require(!whitelistClaimed[_msgSender()], "Address already claimed!");
         bytes32 leaf = keccak256(abi.encodePacked(_msgSender()));
-        require(MerkleProof.verify(_merkleProof, merkleRoot, leaf), "Invalid proof!");
+        require(MerkleProofUpgradeable.verify(_merkleProof, merkleRoot, leaf), "Invalid proof!");
 
         whitelistClaimed[_msgSender()] = true;
         _safeMint(_msgSender(), _mintAmount);
@@ -148,7 +183,7 @@ contract VertekFox is ERC721AQueryable, Ownable, ReentrancyGuard {
     function mintForAddress(
         uint256 _mintAmount,
         address _receiver
-    ) public mintCompliance(_mintAmount) onlyOwner assignRarity(_mintAmount) {
+    ) public mintCompliance(_mintAmount) onlyOperator assignRarity(_mintAmount) {
         _safeMint(_receiver, _mintAmount);
     }
 
@@ -156,7 +191,9 @@ contract VertekFox is ERC721AQueryable, Ownable, ReentrancyGuard {
         return 1;
     }
 
-    function tokenURI(uint256 _tokenId) public view virtual override(ERC721A, IERC721Metadata) returns (string memory) {
+    function tokenURI(
+        uint256 _tokenId
+    ) public view virtual override(ERC721A, IERC721MetadataUpgradeable) returns (string memory) {
         require(_exists(_tokenId), "ERC721Metadata: URI query for nonexistent token");
 
         if (revealed == false) {
@@ -170,48 +207,58 @@ contract VertekFox is ERC721AQueryable, Ownable, ReentrancyGuard {
                 : "";
     }
 
-    function setRevealed(bool _state) public onlyOwner {
+    /**
+     * @dev See {IERC165-supportsInterface}.
+     */
+    function supportsInterface(
+        bytes4 interfaceId
+    ) public view virtual override(AccessControlUpgradeable, ERC721A, IERC165Upgradeable) returns (bool) {
+        return super.supportsInterface(interfaceId);
+    }
+
+    function setRevealed(bool _state) public onlyOperator {
         revealed = _state;
     }
 
-    function setCost(uint256 _cost) public onlyOwner {
+    function setCost(uint256 _cost) public onlyOperator {
         cost = _cost;
     }
 
-    function setMaxMintAmountPerTx(uint256 _maxMintAmountPerTx) public onlyOwner {
+    function setMaxMintAmountPerTx(uint256 _maxMintAmountPerTx) public onlyOperator {
         maxMintAmountPerTx = _maxMintAmountPerTx;
     }
 
-    function setHiddenMetadataUri(string memory _hiddenMetadataUri) public onlyOwner {
+    function setHiddenMetadataUri(string memory _hiddenMetadataUri) public onlyOperator {
         hiddenMetadataUri = _hiddenMetadataUri;
     }
 
-    function setUriPrefix(string memory _uriPrefix) public onlyOwner {
+    function setUriPrefix(string memory _uriPrefix) public onlyOperator {
         uriPrefix = _uriPrefix;
     }
 
-    function setUriSuffix(string memory _uriSuffix) public onlyOwner {
+    function setUriSuffix(string memory _uriSuffix) public onlyOperator {
         uriSuffix = _uriSuffix;
     }
 
-    function setPaused(bool _state) public onlyOwner {
+    function setPaused(bool _state) public onlyOperator {
         paused = _state;
     }
 
-    function setMerkleRoot(bytes32 _merkleRoot) public onlyOwner {
+    function setMerkleRoot(bytes32 _merkleRoot) public onlyOperator {
         merkleRoot = _merkleRoot;
     }
 
-    function setWhitelistMintEnabled(bool _state) public onlyOwner {
+    function setWhitelistMintEnabled(bool _state) public onlyOperator {
         whitelistMintEnabled = _state;
     }
 
-    function withdraw() public onlyOwner nonReentrant {
+    function withdraw(address recipient) public onlyOperator nonReentrant {
+        require(recipient != address(0), "Cannot withdraw to zero address");
         // This will transfer the remaining contract balance to the owner.
         // Do not remove this otherwise you will not be able to withdraw the funds.
         // =============================================================================
-        (bool os, ) = payable(owner()).call{ value: address(this).balance }("");
-        require(os);
+        (bool os, ) = payable(recipient).call{ value: address(this).balance }("");
+        require(os, "Withdraw call failed");
         // =============================================================================
     }
 

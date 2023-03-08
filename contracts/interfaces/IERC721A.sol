@@ -4,13 +4,13 @@
 
 pragma solidity 0.8.13;
 
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC721/extensions/IERC721MetadataUpgradeable.sol";
 
 /**
  * @dev Interface of an ERC721A compliant contract.
  */
-interface IERC721A is IERC721, IERC721Metadata {
+interface IERC721A is IERC721Upgradeable, IERC721MetadataUpgradeable {
     /**
      * The caller must own the token or be an approved operator.
      */
