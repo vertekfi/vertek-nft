@@ -1,0 +1,452 @@
+{
+  "manifestVersion": "3.2",
+  "admin": {
+    "address": "0x3f73B892E3C0dBb8721419a7C789362aEFfE06E2",
+    "txHash": "0x579a7056d25c2024b2367545d0a4a24e915c826baf5c8ca799421f49df2b3f1f"
+  },
+  "proxies": [
+    {
+      "address": "0xb8b332a9960c645904DE7Ce278bbF9F6F56a9C7d",
+      "txHash": "0x47699ab7da70f48ee6fd6089eacee69f10a434ac4baec494c988dae61e733ca5",
+      "kind": "transparent"
+    }
+  ],
+  "impls": {
+    "3cff9603c31bef82a55ff7a04cfafb73d198055b6a0c0471054a8bb86f746248": {
+      "address": "0xA76313C4689C1660bC551bd10432a7946438efe8",
+      "txHash": "0x086992169111545c10cba7f0984d0e3bb4f88514564e7f3ba03684a1c1e8dcec",
+      "layout": {
+        "solcVersion": "0.8.13",
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin\\contracts-upgradeable\\proxy\\utils\\Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\utils\\ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ERC165Upgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\utils\\introspection\\ERC165Upgradeable.sol:41"
+          },
+          {
+            "label": "_currentIndex",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_uint256",
+            "contract": "ERC721A",
+            "src": "contracts\\ERC721A.sol:29"
+          },
+          {
+            "label": "_burnCounter",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_uint256",
+            "contract": "ERC721A",
+            "src": "contracts\\ERC721A.sol:32"
+          },
+          {
+            "label": "_name",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_string_storage",
+            "contract": "ERC721A",
+            "src": "contracts\\ERC721A.sol:35"
+          },
+          {
+            "label": "_symbol",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_string_storage",
+            "contract": "ERC721A",
+            "src": "contracts\\ERC721A.sol:38"
+          },
+          {
+            "label": "_ownerships",
+            "offset": 0,
+            "slot": "105",
+            "type": "t_mapping(t_uint256,t_struct(TokenOwnership)5315_storage)",
+            "contract": "ERC721A",
+            "src": "contracts\\ERC721A.sol:42"
+          },
+          {
+            "label": "_addressData",
+            "offset": 0,
+            "slot": "106",
+            "type": "t_mapping(t_address,t_struct(AddressData)5324_storage)",
+            "contract": "ERC721A",
+            "src": "contracts\\ERC721A.sol:45"
+          },
+          {
+            "label": "_tokenApprovals",
+            "offset": 0,
+            "slot": "107",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721A",
+            "src": "contracts\\ERC721A.sol:48"
+          },
+          {
+            "label": "_operatorApprovals",
+            "offset": 0,
+            "slot": "108",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721A",
+            "src": "contracts\\ERC721A.sol:51"
+          },
+          {
+            "label": "_roles",
+            "offset": 0,
+            "slot": "109",
+            "type": "t_mapping(t_bytes32,t_struct(RoleData)34_storage)",
+            "contract": "AccessControlUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\access\\AccessControlUpgradeable.sol:61"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "110",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "AccessControlUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\access\\AccessControlUpgradeable.sol:259"
+          },
+          {
+            "label": "_status",
+            "offset": 0,
+            "slot": "159",
+            "type": "t_uint256",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\ReentrancyGuardUpgradeable.sol:38"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "160",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "ReentrancyGuardUpgradeable",
+            "src": "@openzeppelin\\contracts-upgradeable\\security\\ReentrancyGuardUpgradeable.sol:80"
+          },
+          {
+            "label": "merkleRoot",
+            "offset": 0,
+            "slot": "209",
+            "type": "t_bytes32",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:32"
+          },
+          {
+            "label": "whitelistClaimed",
+            "offset": 0,
+            "slot": "210",
+            "type": "t_mapping(t_address,t_bool)",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:33"
+          },
+          {
+            "label": "baseRarity",
+            "offset": 0,
+            "slot": "211",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:34"
+          },
+          {
+            "label": "rarityUpdaterAddress",
+            "offset": 0,
+            "slot": "212",
+            "type": "t_address",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:35"
+          },
+          {
+            "label": "_seedRarity",
+            "offset": 0,
+            "slot": "213",
+            "type": "t_uint256",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:37"
+          },
+          {
+            "label": "rarityAssigned",
+            "offset": 0,
+            "slot": "214",
+            "type": "t_uint256",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:38"
+          },
+          {
+            "label": "internalIndex",
+            "offset": 0,
+            "slot": "215",
+            "type": "t_uint256",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:39"
+          },
+          {
+            "label": "attackRarity",
+            "offset": 0,
+            "slot": "216",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:41"
+          },
+          {
+            "label": "defenseRarity",
+            "offset": 0,
+            "slot": "217",
+            "type": "t_mapping(t_uint256,t_uint256)",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:42"
+          },
+          {
+            "label": "a_seedRarity",
+            "offset": 0,
+            "slot": "218",
+            "type": "t_uint256",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:43"
+          },
+          {
+            "label": "d_seedRarity",
+            "offset": 0,
+            "slot": "219",
+            "type": "t_uint256",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:44"
+          },
+          {
+            "label": "uriPrefix",
+            "offset": 0,
+            "slot": "220",
+            "type": "t_string_storage",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:46"
+          },
+          {
+            "label": "uriSuffix",
+            "offset": 0,
+            "slot": "221",
+            "type": "t_string_storage",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:47"
+          },
+          {
+            "label": "hiddenMetadataUri",
+            "offset": 0,
+            "slot": "222",
+            "type": "t_string_storage",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:48"
+          },
+          {
+            "label": "cost",
+            "offset": 0,
+            "slot": "223",
+            "type": "t_uint256",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:50"
+          },
+          {
+            "label": "maxSupply",
+            "offset": 0,
+            "slot": "224",
+            "type": "t_uint256",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:51"
+          },
+          {
+            "label": "maxMintAmountPerTx",
+            "offset": 0,
+            "slot": "225",
+            "type": "t_uint256",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:52"
+          },
+          {
+            "label": "paused",
+            "offset": 0,
+            "slot": "226",
+            "type": "t_bool",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:54"
+          },
+          {
+            "label": "whitelistMintEnabled",
+            "offset": 1,
+            "slot": "226",
+            "type": "t_bool",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:55"
+          },
+          {
+            "label": "revealed",
+            "offset": 2,
+            "slot": "226",
+            "type": "t_bool",
+            "contract": "VertekFox",
+            "src": "contracts\\VertekFoxNFT.sol:56"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_bytes32": {
+            "label": "bytes32",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(AddressData)5324_storage)": {
+            "label": "mapping(address => struct IERC721A.AddressData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_bytes32,t_struct(RoleData)34_storage)": {
+            "label": "mapping(bytes32 => struct AccessControlUpgradeable.RoleData)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(TokenOwnership)5315_storage)": {
+            "label": "mapping(uint256 => struct IERC721A.TokenOwnership)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_uint256)": {
+            "label": "mapping(uint256 => uint256)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(AddressData)5324_storage": {
+            "label": "struct IERC721A.AddressData",
+            "members": [
+              {
+                "label": "balance",
+                "type": "t_uint64",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "numberMinted",
+                "type": "t_uint64",
+                "offset": 8,
+                "slot": "0"
+              },
+              {
+                "label": "numberBurned",
+                "type": "t_uint64",
+                "offset": 16,
+                "slot": "0"
+              },
+              {
+                "label": "aux",
+                "type": "t_uint64",
+                "offset": 24,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(RoleData)34_storage": {
+            "label": "struct AccessControlUpgradeable.RoleData",
+            "members": [
+              {
+                "label": "members",
+                "type": "t_mapping(t_address,t_bool)",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "adminRole",
+                "type": "t_bytes32",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_struct(TokenOwnership)5315_storage": {
+            "label": "struct IERC721A.TokenOwnership",
+            "members": [
+              {
+                "label": "addr",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "startTimestamp",
+                "type": "t_uint64",
+                "offset": 20,
+                "slot": "0"
+              },
+              {
+                "label": "burned",
+                "type": "t_bool",
+                "offset": 28,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint64": {
+            "label": "uint64",
+            "numberOfBytes": "8"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    }
+  }
+}

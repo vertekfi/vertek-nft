@@ -14,7 +14,6 @@
  * Discord: https://discord.gg/vertek-ames-aalto
  * Medium: https://medium.com/@verteklabs
  * Twitter: https://twitter.com/Vertek_Dex
- * Telegram: https://t.me/aalto_protocol
  */
 
 pragma solidity 0.8.13;
@@ -109,34 +108,6 @@ contract VertekFox is ERC721AQueryable, AccessControlUpgradeable, ReentrancyGuar
         _;
     }
 
-    modifier assignRarity(uint256 _mintAmount) {
-        uint256 raritySeed = block.timestamp;
-        for (uint i = 0; i < _mintAmount; i++) {
-            uint256 rarityModulus = ((raritySeed % 10) + _seedRarity) % 10;
-            if (rarityModulus == 0) {
-                rarityAssigned = 4;
-            }
-            if (rarityModulus >= 1 && rarityModulus <= 2) {
-                rarityAssigned = 3;
-            }
-            if (rarityModulus >= 3 && rarityModulus <= 5) {
-                rarityAssigned = 2;
-            }
-            if (rarityModulus >= 6 && rarityModulus <= 10) {
-                rarityAssigned = 1;
-            }
-            baseRarity[internalIndex] = rarityAssigned;
-            rarityModulus++;
-            _seedRarity = rarityModulus;
-            attackRarity[internalIndex] = (((raritySeed % 35) + a_seedRarity) % 40) - 4;
-            defenseRarity[internalIndex] = ((raritySeed % 30) + d_seedRarity + _seedRarity) % 40;
-            a_seedRarity = a_seedRarity + d_seedRarity;
-            d_seedRarity = d_seedRarity + _seedRarity;
-            internalIndex++;
-        }
-        _;
-    }
-
     modifier onlyOperator() {
         require(hasRole(DEFAULT_ADMIN_ROLE, _msgSender()) || hasRole(OPERATOR_ROLE, _msgSender()), "Only operator");
         _;
@@ -157,29 +128,59 @@ contract VertekFox is ERC721AQueryable, AccessControlUpgradeable, ReentrancyGuar
     function whitelistMint(
         uint256 _mintAmount,
         bytes32[] calldata _merkleProof
-    ) public payable mintCompliance(_mintAmount) mintPriceCompliance(_mintAmount) assignRarity(_mintAmount) {
+    ) public payable mintCompliance(_mintAmount) mintPriceCompliance(_mintAmount) {
         // Verify whitelist requirements
         require(whitelistMintEnabled, "The whitelist sale is not enabled!");
         require(!whitelistClaimed[_msgSender()], "Address already claimed!");
         bytes32 leaf = keccak256(abi.encodePacked(_msgSender()));
         require(MerkleProofUpgradeable.verify(_merkleProof, merkleRoot, leaf), "Invalid proof!");
 
+        _assignRarity(_mintAmount);
+
         whitelistClaimed[_msgSender()] = true;
         _safeMint(_msgSender(), _mintAmount);
     }
 
-    function mint(
-        uint256 _mintAmount
-    ) public payable mintCompliance(_mintAmount) mintPriceCompliance(_mintAmount) assignRarity(_mintAmount) {
+    function mint(uint256 _mintAmount) public payable mintCompliance(_mintAmount) mintPriceCompliance(_mintAmount) {
         require(!paused, "The contract is paused!");
+        _assignRarity(_mintAmount);
         _safeMint(_msgSender(), _mintAmount);
     }
 
-    function mintForAddress(
-        uint256 _mintAmount,
-        address _receiver
-    ) public mintCompliance(_mintAmount) onlyOperator assignRarity(_mintAmount) {
+    function mintForAddress(uint256 _mintAmount, address _receiver) public mintCompliance(_mintAmount) onlyOperator {
+        _assignRarity(_mintAmount);
         _safeMint(_receiver, _mintAmount);
+    }
+
+    function _assignRarity(uint256 _mintAmount) internal {
+        uint256 raritySeed = block.timestamp;
+        for (uint i = 0; i < _mintAmount; i++) {
+            uint256 rarityModulus = ((raritySeed % 10) + _seedRarity) % 10;
+            if (rarityModulus == 0) {
+                rarityAssigned = 4;
+            }
+
+            if (rarityModulus >= 1 && rarityModulus <= 2) {
+                rarityAssigned = 3;
+            }
+
+            if (rarityModulus >= 3 && rarityModulus <= 5) {
+                rarityAssigned = 2;
+            }
+
+            if (rarityModulus >= 6 && rarityModulus <= 10) {
+                rarityAssigned = 1;
+            }
+
+            baseRarity[internalIndex] = rarityAssigned;
+            rarityModulus++;
+            _seedRarity = rarityModulus;
+            attackRarity[internalIndex] = (((raritySeed % 35) + a_seedRarity) % 40) - 4;
+            defenseRarity[internalIndex] = ((raritySeed % 30) + d_seedRarity + _seedRarity) % 40;
+            a_seedRarity = a_seedRarity + d_seedRarity;
+            d_seedRarity = d_seedRarity + _seedRarity;
+            internalIndex++;
+        }
     }
 
     function _startTokenId() internal view virtual override returns (uint256) {
